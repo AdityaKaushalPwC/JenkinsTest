@@ -4,6 +4,7 @@ import groovy.json.JsonSlurperClassic
     //Method to return the project directory name
     def getFolderName() {
         def array = pwd().split("/")
+	println array
         def folderNameList = array[array.length - 2].split('\\\\')
         def projectFolderName = folderNameList[folderNameList.size()-1].split('@')[0]
         return projectFolderName;
