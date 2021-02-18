@@ -6,7 +6,7 @@ import groovy.json.JsonSlurperClassic
         def array = pwd().split("/")
 	println array
         def folderNameList = array[array.length - 2].split('\\\\')
-        def projectFolderName = folderNameList[folderNameList.size()-1].split('@')[0]
+        def projectFolderName = folderNameList[folderNameList.size()-0]
         return projectFolderName;
     }
 
