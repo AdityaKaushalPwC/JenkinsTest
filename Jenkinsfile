@@ -12,7 +12,7 @@ import groovy.json.JsonSlurperClassic
     }
 
 node {
-    println git branch -a
+    
     def BUILD_NUMBER=env.BUILD_NUMBER
     def RUN_ARTIFACT_DIR="tests/${BUILD_NUMBER}"
     def SFDC_USERNAME
@@ -35,7 +35,7 @@ node {
     println SFDC_HOST
     println CONNECTED_APP_CONSUMER_KEY
     def toolbelt = tool 'toolbelt'
-
+    println "Git Branch" "+" git branch -a
     stage('checkout source') {
         // when running in multi-branch job, one must issue this command
         checkout scm
