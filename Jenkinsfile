@@ -11,15 +11,22 @@ import groovy.json.JsonSlurperClassic
         return projectFolderName;
     }
 
+	def getGitBranchName() {
+	    return scm.branches[0].name
+	}
+
 node {
     
     def BUILD_NUMBER=env.BUILD_NUMBER
     def RUN_ARTIFACT_DIR="tests/${BUILD_NUMBER}"
     def SFDC_USERNAME
-
+	
     def projectFolderName1 = getFolderName()
     print "Project Directory Name--"+"${projectFolderName1}"
     
+    def gitBrnchName = getGitBranchName()
+    print "Git Name--"+"${gitBrnchName}"
+	
     //Fetching the project specific properties of the environment variables
     def HUB_ORG=env.getProperty("${projectFolderName1}"+'_User_Name') // to get the username
     def SFDC_HOST = env.getProperty("${projectFolderName1}"+'_Login_URL') // to get the salesforce login url
@@ -35,7 +42,7 @@ node {
     println SFDC_HOST
     println CONNECTED_APP_CONSUMER_KEY
     def toolbelt = tool 'toolbelt'
-    println "Git Branch" "+" git branch -a
+   
     stage('checkout source') {
         // when running in multi-branch job, one must issue this command
         checkout scm
@@ -45,8 +52,7 @@ node {
     withCredentials([file(credentialsId: JWT_KEY_CRED_ID, variable: 'jwt_key_file')]) {
         stage('Deploye Code') {
 	    
-	    rc = sh returnStatus: true, script: "git branch -a"
-		println rc
+	   
             rc = bat returnStatus: true, script: "\"${toolbelt}\" force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile \"${jwt_key_file}\" --setdefaultdevhubusername --instanceurl ${SFDC_HOST}"		    
 
             if (rc != 0) { error 'hub org authorization failed' }
